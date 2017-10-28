@@ -1,2 +1,3 @@
 .ipynb_checkpoints/
 glove/*.txt
+pred.csv
