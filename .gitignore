@@ -2,3 +2,4 @@
 glove/*.txt
 pred.csv
 *.log
+*.model
