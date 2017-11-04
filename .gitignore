@@ -1,5 +1,5 @@
 .ipynb_checkpoints/
 glove/*.txt
-pred.csv
+pred*.csv
 *.log
 *.model
