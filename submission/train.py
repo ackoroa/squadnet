@@ -1,4 +1,4 @@
-# # Imports and Settings
+print "Imports and Settings"
 import csv, json, string, re, time
 from random import shuffle
 
@@ -10,9 +10,9 @@ from squadnet import *
 from squadsettings import *
 
 
-# # Read Word Vectors
+print "Read Word Vectors"
 glove = {}
-f = open('glove.6B.' + str(WORD_VECTOR_SIZE) + 'd.txt', 'rb')
+f = open('data/glove.6B.' + str(WORD_VECTOR_SIZE) + 'd.txt', 'rb')
 reader = csv.reader(f, delimiter=' ', quoting=csv.QUOTE_NONE)
 for row in reader:
     key = row[0]
@@ -21,7 +21,7 @@ for row in reader:
 len(glove)
 
 
-# # Read Dataset
+print "Read Dataset"
 def text2vec(text):
     tokens = word_tokenize(text.lower())
     textVec = np.array([])
@@ -37,7 +37,7 @@ def answerpos(context, answer, answer_start):
 
 
 train = []
-for jsonRow in json.loads(open('train.json', 'rb').read()):
+for jsonRow in json.loads(open('data/train.json', 'rb').read()):
     for paragraph in jsonRow['paragraphs']:
         ctxVec = text2vec(paragraph['context'])
         
@@ -79,7 +79,7 @@ def get_batch(i, batch_size, data):
     return Variable(cVec),            Variable(qVec),            Variable(np.array(ans_start, dtype=np.int32)).reshape(-1,1),            Variable(np.array(ans_end, dtype=np.int32)).reshape(-1,1)
 
 
-# # Create Model
+print "Create Model"
 opt = optimizers.Adam(alpha=1e-3)
 model = SquadNet(WORD_VECTOR_SIZE, H_SIZE, POOL_SIZE, DROPOUT_RATE, USE_GPU)
 if USE_GPU:
@@ -87,7 +87,7 @@ if USE_GPU:
 opt.setup(model)
 
 
-# # Define Training Loop
+print "Define Training Loop"
 def train_model(model, opt, epoch_start, epoch_end, batch_size, print_interval):
     for epoch in range(epoch_start, epoch_end):
         print "Epoch", epoch + 1, "/", epoch_end
@@ -147,6 +147,6 @@ def train_model(model, opt, epoch_start, epoch_end, batch_size, print_interval):
         print "Train Acc:", epochAcc, "Train Loss:", epochLoss
 
 
-# # Train Model
+print "Train Model"
 train_model(model, opt, 0, N_EPOCH, MINI_BATCH_SIZE, 1000)
 serializers.save_npz('squadnet.model', model)

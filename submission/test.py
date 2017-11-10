@@ -1,4 +1,4 @@
-# # Imports and Settings
+print "Imports and Settings"
 import csv, json, string, re, time
 
 import numpy as np
@@ -9,9 +9,9 @@ from squadnet import *
 from squadsettings import *
 
 
-# # Read Word Vectors
+print "Read Word Vectors"
 glove = {}
-f = open('glove.6B.' + str(WORD_VECTOR_SIZE) + 'd.txt', 'rb')
+f = open('data/glove.6B.' + str(WORD_VECTOR_SIZE) + 'd.txt', 'rb')
 reader = csv.reader(f, delimiter=' ', quoting=csv.QUOTE_NONE)
 for row in reader:
     key = row[0]
@@ -20,7 +20,7 @@ for row in reader:
 len(glove)
 
 
-# # Read Dataset
+print "Read Dataset"
 def text2vec(text):
     tokens = word_tokenize(text.lower())
     textVec = np.array([])
@@ -29,7 +29,7 @@ def text2vec(text):
     return textVec.reshape(1, -1)
 
 test = []
-for jsonRow in json.loads(open('dataset/test.json', 'rb').read()):
+for jsonRow in json.loads(open('data/test.json', 'rb').read()):
     for paragraph in jsonRow['paragraphs']:
         ctx = paragraph['context']
         ctxVec = text2vec(paragraph['context'])
@@ -40,13 +40,13 @@ for jsonRow in json.loads(open('dataset/test.json', 'rb').read()):
             test.append((ctxVec, qnVec, qnId, ctx))
 
 
-# # Create Model
+print "Create Model"
 model = SquadNet(WORD_VECTOR_SIZE, H_SIZE, POOL_SIZE, DROPOUT_RATE, USE_GPU)
 if USE_GPU:
     model.to_gpu()
   
 
-# # Output Answers
+print "Output Answers"
 def get_test_batch(i, batch_size, data):
     j = min(i + batch_size, len(data))
     
@@ -130,4 +130,4 @@ def test_model(test_batch_size, test_print_interval, model_file,out_file):
     f.close()
 
 
-test_model(MINI_BATCH_SIZE, 1000, 'squadnet.model','predictions.csv')
+test_model(MINI_BATCH_SIZE, 1000, 'squadnet.model','test.csv')
