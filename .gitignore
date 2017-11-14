@@ -4,3 +4,4 @@ pred*.csv
 *.log
 *.model
 *.pyc
+*.zip
